@@ -1,1 +1,1 @@
-./build/examples/openpose/openpose.bin --video ss.u511.avi --write_pose_json u511.sb
+../openpose/build/examples/openpose/openpose.bin --video $1 --write_pose_json $1.json
