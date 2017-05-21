@@ -51,7 +51,19 @@ def step1():
       print( shot )
   open("n_d.pkl", "wb").write( pickle.dumps(n_d) )
 
+""" MMDのVMDをCSV化したものを、補完しつつ、フレームごとのデータにす　"""
+def step2():
+  for name in glob.glob("./*.utf8"):
+    with open(name, "r") as f:
+      next(f) 
+      for line in f:
+        line = line.strip()
+        print(line)
+
+
 if __name__ == '__main__':
   if '--step1' in sys.argv:
     step1()
-    
+  
+  if "--step2" in sys.argv:
+    step2()
