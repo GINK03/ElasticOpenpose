@@ -100,6 +100,38 @@ def step3():
         fill_frame_part_param[i] = frame_part_param[i]
     open("fill_%s"%name, "wb").write(pickle.dumps(fill_frame_part_param))
 
+""" パーツの補完をする """
+def step4():
+  
+  part_index = pickle.loads( open("part_index.pkl", "rb").read() )
+  index_part = { index:part for part, index in part_index.items() }
+  
+  for name in glob.glob("fill_frame_part_param_*.csv.utf8.pkl"):
+    frame_param_param = {}
+    fill_frame_part_param = pickle.loads( open(name, "rb").read() )
+    for index, part in index_part.items():
+      print(index, part)
+      buffer = None
+      for frame, part_param in sorted( fill_frame_part_param.items(), key=lambda x:int(x[0]) ):
+        #print(index, frame, part_param.get(index))
+        
+        if part_param.get(index) is None:
+          ...
+        else:
+          buffer =  part_param.get(index)
+        
+        
+        if frame_param_param.get(frame) is None:
+          frame_param_param[frame] = {}
+        if frame_param_param[frame].get(index) is None:
+          frame_param_param[frame][index] = buffer
+
+
+    for index, part in index_part.items():
+      for frame, part_param in sorted( frame_param_param.items(), key=lambda x:int(x[0]) ):
+        print(index, frame, part_param.get(index))
+
+
 if __name__ == '__main__':
   if '--step1' in sys.argv:
     step1()
@@ -109,3 +141,6 @@ if __name__ == '__main__':
 
   if "--step3" in sys.argv:
     step3()
+
+  if "--step4" in sys.argv:
+    step4()
