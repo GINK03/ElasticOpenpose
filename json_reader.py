@@ -51,7 +51,7 @@ def step1():
       print( shot )
   open("n_d.pkl", "wb").write( pickle.dumps(n_d) )
 
-""" MMDのVMDをCSV化したものを、補完しつつ、フレームごとのデータにす　"""
+""" MMDのVMDをCSV化したものを、フレームごとのデータにす　"""
 def step2():
   part_index = {}
   for name in glob.glob("*.utf8"):
@@ -83,9 +83,29 @@ def step2():
     open("frame_part_param_{name}.pkl".format(name=name), "wb").write( pickle.dumps(frame_part_param) )
     print(name)
 
+""" フレームの補完します """
+def step3():
+  for name in glob.glob("frame_part_param_*.pkl"):
+    print(name)
+    frame_part_param      = pickle.loads(open(name, "rb").read())
+    fill_frame_part_param = {
+    } 
+    buffered              = None
+    for i in range(0, 3000):
+      i = "%d"%i
+      if frame_part_param.get(i) is None: 
+        fill_frame_part_param[i] = buffered
+      else:
+        buffered = frame_part_param[i]
+        fill_frame_part_param[i] = frame_part_param[i]
+    open("fill_%s"%name, "wb").write(pickle.dumps(fill_frame_part_param))
+
 if __name__ == '__main__':
   if '--step1' in sys.argv:
     step1()
   
   if "--step2" in sys.argv:
     step2()
+
+  if "--step3" in sys.argv:
+    step3()
