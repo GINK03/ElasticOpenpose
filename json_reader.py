@@ -53,13 +53,35 @@ def step1():
 
 """ MMDのVMDをCSV化したものを、補完しつつ、フレームごとのデータにす　"""
 def step2():
-  for name in glob.glob("./*.utf8"):
+  part_index = {}
+  for name in glob.glob("*.utf8"):
     with open(name, "r") as f:
       next(f) 
       for line in f:
         line = line.strip()
-        print(line)
+        parts = line.split(",").pop(0)
+        if part_index.get(parts) is None:
+          part_index[parts] = len(part_index)
+        ... #print(parts)
+  open("part_index.pkl", "wb").write( pickle.dumps(part_index) ) 
 
+  for name in glob.glob("*.utf8"):
+    frame_part_param = {}
+    with open(name, "r") as f:
+      next(f) 
+      for line in f:
+        line = line.strip()
+        es   = line.split(",")
+        frame = es.pop(1)
+        part  = part_index[es.pop(0)]
+
+        if frame_part_param.get(frame) is None:
+          frame_part_param[frame] = {}
+        if frame_part_param[frame].get(part) is None:
+          frame_part_param[frame][part] = es
+        print(es)
+    open("frame_part_param_{name}.pkl".format(name=name), "wb").write( pickle.dumps(frame_part_param) )
+    print(name)
 
 if __name__ == '__main__':
   if '--step1' in sys.argv:
